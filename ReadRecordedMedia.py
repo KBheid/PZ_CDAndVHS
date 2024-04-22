@@ -136,7 +136,7 @@ def writeOutput():
 				
 		output = "\n".join(outputLines)
 		output = output.replace("%mediaContent%", mediaContent)
-		
+		output = output.replace("%id%", str(id))
 		
 		filename = foundValues['itemDisplayName'] if not foundValues['itemDisplayName'] == None else id
 		fileName = filename.strip().strip('"').replace('.', '').replace(' ', '_').replace('?', '').replace('/', '-').replace(':', '')

@@ -1,5 +1,6 @@
 %itemDisplayName%<br>
 %title%<br>
+%id%<br>
 %if%%author%<br>
 %if%%extra%<br>
 {{Transcript
