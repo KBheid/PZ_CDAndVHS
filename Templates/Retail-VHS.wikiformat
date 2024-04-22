@@ -1,6 +1,6 @@
 %title%<br>
-%if%%subtitle%<br>
-%if%%extra%<br>
+%if%%subtitle%
+%if%%extra%
 {{Transcript
 |icon=vhs
 |text=

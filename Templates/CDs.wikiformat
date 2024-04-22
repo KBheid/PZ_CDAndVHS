@@ -1,8 +1,9 @@
+%itemDisplayName%<br>
 %title%<br>
-%if%%subtitle%<br>
+%if%%author%<br>
 %if%%extra%<br>
 {{Transcript
-|icon=vhs
+|icon=cd
 |text=
 %mediaContent%
 }}
