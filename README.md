@@ -41,24 +41,25 @@ For example, the default VHS.wikiformat looks like this:
 In this example, we can see two usages of this, in the first line with `%title%` and in the second to last line with `%mediaContent%`.
 
 There are three special replacement types, `%mediaContent%`, `%mediaContentItem%`, and `%if%`. 
-*`%mediaContent%` is used where you want to insert all lines of the media and will replace the lines with your defined template in `contentLine.wikiformat`. 
-*`%mediaContentItem%` is used *only* in the `contentLine.wikiformat`. This insertion tag will replace itself with the content of a single line.
-*`%if%` is the only non-insertion tag. This tag instead *removes* the line it is present on if an insertion tag in the same line fails to find a result. The tag is consumed in the process.
+
+* `%mediaContent%` is used where you want to insert all lines of the media and will replace the lines with your defined template in `contentLine.wikiformat`.
+* `%mediaContentItem%` is used *only* in the `contentLine.wikiformat`. This insertion tag will replace itself with the content of a single line.
+* `%if%` is the only non-insertion tag. This tag instead *removes* the line it is present on if an insertion tag in the same line fails to find a result. The tag is consumed in the process.
 
 Further, insertion tags can be defined in the Python file, as seen in the Customization section below. These tags will only be usable if they match with values found in Recorded Media definitions found at `.../ProjectZomboid/media/lua/shared/RecordedMedia/recorded_media.lua`. By default, the following tags exist:
-*`%itemDisplayName%`: The display name of the item, as found in game (always available).
-*`%id%`: The media id (always available).
-*`%category%`: The category of media: `CDs`, `Home-VHS`, `Retail-VHS`, or `VHS` (always available).
-*`%subtitle%`: The media's subtitle (optional).
-*`%author%`: The media's author (optional).
-*`%extra%`: Extra information, for CDs often Production information (optional).
-*`%spawning%`: ??? (always available)
+* `%itemDisplayName%`: The display name of the item, as found in game (always available).
+* `%id%`: The media id (always available).
+* `%category%`: The category of media: `CDs`, `Home-VHS`, `Retail-VHS`, or `VHS` (always available).
+* `%subtitle%`: The media's subtitle (optional).
+* `%author%`: The media's author (optional).
+* `%extra%`: Extra information, for CDs often Production information (optional).
+* `%spawning%`: ??? (always available)
 
 Lastly, within `contentLine.wikiformat`, four additional tags are present and always available.
-*`%r%`: The red value for the text color.
-*`%g%`: The green value for the text color.
-*`%b%`: The blue value for the text color.
-*`%codes%`: The codes to apply stat changes (including skill xp). 
+* `%r%`: The red value for the text color.
+* `%g%`: The green value for the text color.
+* `%b%`: The blue value for the text color.
+* `%codes%`: The codes to apply stat changes (including skill xp). 
 
 ## Simple Customization
 All topics here require modifying the `ReadRecordedMedia.py` file. If you do not know programming, it may be difficult if you run into an issue - you can contact me on PZWiki [here](https://pzwiki.net/wiki/User_talk:Thing_II) if you need assistance.
