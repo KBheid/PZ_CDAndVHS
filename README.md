@@ -40,11 +40,12 @@ For example, the default VHS.wikiformat looks like this:
 ```
 In this example, we can see two usages of this, in the first line with `%title%` and in the second to last line with `%mediaContent%`.
 
-There are three special replacement types, `%mediaContent%`, `%mediaContentItem%`, and `%if%`. 
+There are four special replacement types, `%mediaContent%`, `%mediaContentItem%`, `%if%`, and `%ifis%`. 
 
 * `%mediaContent%` is used where you want to insert all lines of the media and will replace the lines with your defined template in `contentLine.wikiformat`.
 * `%mediaContentItem%` is used *only* in the `contentLine.wikiformat`. This insertion tag will replace itself with the content of a single line.
 * `%if%` is the only non-insertion tag. This tag instead *removes* the line it is present on if an insertion tag in the same line fails to find a result. The tag is consumed in the process.
+* `%ifis%(val1,val2)` This tag only replaces itself with `val2` if `val1` is present within the current item. For example, `%ifis%(author, Author: )` would replace itself with `Author: ` only if there is an `author` defined.
 
 Further, insertion tags can be defined in the Python file, as seen in the Customization section below. These tags will only be usable if they match with values found in Recorded Media definitions found at `.../ProjectZomboid/media/lua/shared/RecordedMedia/recorded_media.lua`. By default, the following tags exist:
 * `%itemDisplayName%`: The display name of the item, as found in game (always available).
@@ -78,6 +79,33 @@ mediaTypes = [
 	"Home-VHS",
 	"Retail-VHS"
 ]
+```
+### Codes
+The codes variable is used to decode the game's stat/skill/recipe change codes from in-game into formattable, readable words. A special tag `%s` is used here, which inserts the value of the code. The key is the code as appears in `.../ProjectZomboid/media/lua/shared/RecordedMedia/recorded_media.lua`. The default values are:
+```
+codes = {
+	'BOR': None,
+	'REL': 'Reloading %s',
+	'AIM': 'Aiming %s',
+	'FRM': 'Farming %s',
+	'SBA': 'Short Blade %s',
+	'BUA': 'Long Blunt %s',
+	'MTL': 'Metalworking %s',
+	'MEC': 'Mechanical %s',
+	'COO': 'Cooking %s',
+	'CRP': 'Carpentry %s',
+	'FIS': 'Fishing %s',
+	'FOR': 'Foraging %s',
+	'TRA': 'Trapping %s',
+	'TAI': 'Tailoring %s',
+	'ELC': 'Electrical %s',
+	'DOC': 'First Aid %s',
+	'LFT': 'Lightfooted %s',
+	'STS': 'Stress {{mood|%s}}',
+	'PAN': 'Panic {{mood|%s}}',
+	'FAT': 'Fat %s',
+	'RCP': 'Recipe %s',
+}
 ```
 ### Value Names
 Value Names are simply the data that you want to extract from `.../ProjectZomboid/media/lua/shared/RecordedMedia/recorded_media.lua`. The second item in the tuple is whether or not the value should utilize the Translation data (ie. if it appears as a GUID). The default values are:
