@@ -116,6 +116,7 @@ def writeOutput():
 		
 		id = key
 		foundValues = {}
+		people = {(1, 1, 1): ""}
 		
 		for valueName, findTranslation in valueNames:
 			if findTranslation:
@@ -128,6 +129,7 @@ def writeOutput():
 				foundValues[valueName] = getattr(value, valueName, None)
 		
 		
+		lastPerson = None
 		lineStrings = []
 		for line in value.lines:
 			r = line.r
@@ -136,15 +138,25 @@ def writeOutput():
 			codes = parseCodes(line.codes)
 			text = TranslationData[line.text].strip()[1:-1]
 			
+			# Special case, person should not be populated if it has not changed from previous line
+			if (r, g, b) not in people:
+				people[(r, g, b)] = "Person " + str(len(people))
+			person = people[(r, g, b)]
+			if person == lastPerson:
+				person = ""
+			else:
+				lastPerson = person
+			
 			newLine = contentLineTemplate
 			newLine = replaceOrAppendDelete(newLine, "%r%", r)
 			newLine = replaceOrAppendDelete(newLine, "%g%", g)
 			newLine = replaceOrAppendDelete(newLine, "%b%", b)
 			newLine = replaceOrAppendDelete(newLine, "%codes%", codes)
+			newLine = replaceOrAppendDelete(newLine, "%person%", person)
 			newLine = replaceOrAppendDelete(newLine, "%mediaContentItem%", text)
 			
 			# Handle %ifis%
-			newLine = parseIfIs(newLine, {'r':r, 'g':g, 'b':b, 'codes':codes})
+			newLine = parseIfIs(newLine, {'r':r, 'g':g, 'b':b, 'codes':codes, 'person':person})
 			
 			if not "||DELETE||" in newLine:
 				lineStrings.append(newLine)
