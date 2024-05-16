@@ -144,8 +144,15 @@ def writeOutput():
 			person = people[(r, g, b)]
 			if person == lastPerson:
 				person = ""
+				if len(lineStrings) > 0:
+					lineStrings[-1] = parseLast(lineStrings[-1], {})
 			else:
 				lastPerson = person
+				if len(lineStrings) > 0:
+					if person != '':
+						lineStrings[-1] = parseLast(lineStrings[-1], {'last':'last'})
+					else:
+						lineStrings[-1] = parseLast(lineStrings[-1], {})
 			
 			newLine = contentLineTemplate
 			newLine = replaceOrAppendDelete(newLine, "%r%", r)
@@ -160,6 +167,11 @@ def writeOutput():
 			
 			if not "||DELETE||" in newLine:
 				lineStrings.append(newLine)
+			
+		
+		# Parse the final %last%
+		if len(lineStrings) > 0:
+			lineStrings[-1] = parseLast(lineStrings[-1], {'last':'last'})
 			
 		mediaContent = "\n".join(lineStrings)
 		
@@ -187,12 +199,12 @@ def writeOutput():
 
 
 def parseIfIs(line, valueDictionary):
-	afterIfIs = []
+	afterTag = []
 
-	splitLine = line.split("%ifis%")
+	splitLine = line.split('%ifis%')
 
 	# Keep the left
-	afterIfIs.append(splitLine[0])
+	afterTag.append(splitLine[0])
 
 	for tag_and_content in splitLine[1:]:
 		match = re.match(r'\(([^,]+),([^)]+)\)', tag_and_content)
@@ -204,20 +216,49 @@ def parseIfIs(line, valueDictionary):
 				valueDictionary[checkExists] not in (None, "") and 
 				valueDictionary[checkExists].strip() != ""):
 				# Do replacement
-				afterIfIs.append(replacement)
+				afterTag.append(replacement)
 
 			remaining_line = tag_and_content[match.end():]
 
 			# Recursively parse remaining line
-			if "%ifis%" in remaining_line:
-				afterIfIs.append(parseIfIs(remaining_line, valueDictionary))
+			if '%ifis%' in remaining_line:
+				afterTag.append(parseIfIs('%ifis%', remaining_line, valueDictionary))
 			else:
-				afterIfIs.append(remaining_line)
+				afterTag.append(remaining_line)
 		else:
 			# Malformed tag, keep as is
-			afterIfIs.append("%ifis%" + tag_and_content)
-	return "".join(afterIfIs)
+			afterTag.append('%ifis%' + tag_and_content)
+	return "".join(afterTag)
 
+def parseLast(line, valueDictionary):
+    afterTag = []
+    tag = '%lastFromPerson%'
+
+    splitLine = line.split(tag)
+
+    # Keep the left
+    afterTag.append(splitLine[0])
+
+    for tag_and_content in splitLine[1:]:
+        match = re.match(r'\(([^,]+)?(?:,([^)]+))?\)', tag_and_content)
+
+        if match:
+            replacement = match.group(0)[1:-1]
+
+            if 'last' in valueDictionary and valueDictionary['last'] not in (None, ""):
+                afterTag.append(replacement)
+
+            remaining_line = tag_and_content[match.end():]
+
+            # Recursively parse remaining line
+            if tag in remaining_line:
+                afterTag.append(parseLast(remaining_line, valueDictionary))
+            else:
+                afterTag.append(remaining_line)
+        else:
+            # Malformed tag, keep as is
+            afterTag.append(tag + tag_and_content)
+    return "".join(afterTag)
 	
 
 def parseCodes(codeLine):

@@ -1,1 +1,1 @@
-%person%%ifis%(person,: )%mediaContentItem% %ifis%(codes,with codes: )%codes%<br>
+%ifis%(person,{{Transcript/row|)%person%%ifis%(person,|)%ifis%(codes,{{tooltip|)%mediaContentItem%%ifis%(codes,|)%codes%%ifis%(codes,}})<br>%lastFromPerson%(}})
