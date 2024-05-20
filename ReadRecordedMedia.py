@@ -144,11 +144,14 @@ def writeOutput():
 			person = people[(r, g, b)]
 			if person == lastPerson:
 				person = ""
+				# Since we're the same person, remove any last tags from the previous line.
 				if len(lineStrings) > 0:
 					lineStrings[-1] = parseLast(lineStrings[-1], {})
 			else:
-				lastPerson = person
+				lastPerson = person if person is not '' else lastPerson
 				if len(lineStrings) > 0:
+					# If we're the empty person (ie. bzzt, etc.), then we dont want to call the previous line the last.
+					# Basically, bzzts etc. count as the person that was speaking before. This is intentional.
 					if person != '':
 						lineStrings[-1] = parseLast(lineStrings[-1], {'last':'last'})
 					else:
@@ -169,7 +172,7 @@ def writeOutput():
 				lineStrings.append(newLine)
 			
 		
-		# Parse the final %last%
+		# Parse the final last tag - because we do this on the following call
 		if len(lineStrings) > 0:
 			lineStrings[-1] = parseLast(lineStrings[-1], {'last':'last'})
 			
