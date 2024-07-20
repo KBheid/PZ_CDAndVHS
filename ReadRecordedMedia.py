@@ -3,6 +3,7 @@ linesToIgnore = 2
 
 # Items in a content line that should be replaced
 replacements = {
+	"*": "<nowiki>*</nowiki>",
 	"[img=music]": '♫'
 }
 mediaTypes = [
@@ -11,15 +12,20 @@ mediaTypes = [
 	"Home-VHS",
 	"Retail-VHS"
 ]
-valueNames = [
-	('title', True),
-	('extra', True),
-	('author', True),
-	('subtitle', True),
-	('itemDisplayName', False),
-	('spawning', False),
-	('category', False)
-]
+
+keyNames = {
+	'itemDisplayName': 'GUID',
+	'spawning': 'spawning',
+	'category': 'category'
+}
+
+valueNames = {
+	'itemDisplayName': 'displayName',
+	'title': 'title',
+	'extra': 'extra',
+	'author': 'author',
+	'subtitle': 'subtitle'
+}
 codes = {
 	'BOR': None,
 	'REL': 'Reloading %s',
@@ -118,16 +124,15 @@ def writeOutput():
 		foundValues = {}
 		people = {(1, 1, 1): ""}
 		
-		for valueName, findTranslation in valueNames:
-			if findTranslation:
-				found = TranslationData[getattr(value, valueName, None)]
-				if found is not None:
-					found = found.strip().strip('"')
+		for valueName, nameToUse in valueNames.items():
+			found = TranslationData[getattr(value, valueName, None)]
+			if found is not None:
+				found = found.strip().strip('"')
 					
-				foundValues[valueName] = found
-			else:
-				foundValues[valueName] = getattr(value, valueName, None)
+			foundValues[nameToUse] = found
 		
+		for keyName, nameToUse in keyNames.items():
+			foundValues[nameToUse] = getattr(value, keyName, None)
 		
 		lastPerson = None
 		lineStrings = []
@@ -148,7 +153,7 @@ def writeOutput():
 				if len(lineStrings) > 0:
 					lineStrings[-1] = parseLast(lineStrings[-1], {})
 			else:
-				lastPerson = person if person is not '' else lastPerson
+				lastPerson = person if person != '' else lastPerson
 				if len(lineStrings) > 0:
 					# If we're the empty person (ie. bzzt, etc.), then we dont want to call the previous line the last.
 					# Basically, bzzts etc. count as the person that was speaking before. This is intentional.
@@ -192,7 +197,7 @@ def writeOutput():
 		
 		output = parseIfIs(output, foundValues)
 		
-		filename = TranslationData[foundValues['itemDisplayName']] if foundValues['itemDisplayName'] in TranslationData else id
+		filename = foundValues['displayName'] if 'displayName' in foundValues else id
 		fileName = filename.strip().strip('"').replace('.', '').replace(' ', '_').replace('?', '').replace('/', '-').replace(':', '')
 		
 		print("Writing file:","Output/" + fileName + ".wikioutput")
